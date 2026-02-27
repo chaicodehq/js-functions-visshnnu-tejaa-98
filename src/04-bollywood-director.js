@@ -46,12 +46,70 @@
  */
 export function createDialogueWriter(genre) {
   // Your code here
+  let genres = {
+    action: (hero, villain) =>
+      `${hero} says: 'Tujhe toh main dekh lunga, ${villain}!'`,
+    romance: (hero, villain) =>
+      `${hero} whispers: '${villain}, tum mere liye sab kuch ho'`,
+    comedy: (hero, villain) =>
+      `${hero} laughs: '${villain} bhai, kya kar rahe ho yaar!'`,
+    drama: (hero, villain) =>
+      `${hero} cries: '${villain}, tune mera sab kuch cheen liya!'`,
+  };
+
+  if (!Object.keys(genres).includes(genre)) return null;
+
+  const factoryFn = (hero, villain) => {
+    if (
+      typeof hero !== "string" ||
+      typeof villain !== "string" ||
+      hero.trim() === "" ||
+      villain.trim() === ""
+    ) {
+      return "...";
+    }
+    return genres[genre](hero, villain);
+  };
+
+  return factoryFn;
 }
 
 export function createTicketPricer(basePrice) {
   // Your code here
+
+  const seatMultiplier = {
+    silver: 1,
+    gold: 1.5,
+    platinum: 2,
+  };
+
+  if (typeof basePrice !== "number" || basePrice <= 0) return null;
+
+  return function factoryFn(seatType, isWeekend = false) {
+    if (!Object.keys(seatMultiplier).includes(seatType)) return null;
+    let price = basePrice * seatMultiplier[seatType];
+    if (isWeekend) {
+      price *= 1.3;
+    }
+    return parseInt(price);
+  };
 }
 
 export function createRatingCalculator(weights) {
   // Your code here
+
+  if (typeof weights !== "object" || weights === null) return null;
+
+  const getAverage = (weights, scores) => {
+    let sum = 0;
+    for (let key in weights) {
+      sum = sum + weights[key] * scores[key];
+    }
+    return sum;
+  };
+
+  return function factorFn(scores) {
+    let average = getAverage(weights, scores);
+    return parseFloat(average.toFixed(1));
+  };
 }

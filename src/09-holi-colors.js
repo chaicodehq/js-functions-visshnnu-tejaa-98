@@ -55,20 +55,88 @@
  */
 export function mixColors(color1, color2) {
   // Your code here
+
+  if (
+    color1 === null ||
+    color2 === null ||
+    color1 === undefined ||
+    color2 === undefined ||
+    typeof color1.r !== "number" ||
+    typeof color1.g !== "number" ||
+    typeof color1.b !== "number" ||
+    typeof color2.r !== "number" ||
+    typeof color2.g !== "number" ||
+    typeof color2.b !== "number"
+  )
+    return null;
+
+  let r = Math.round((color1.r + color2.r) / 2);
+  let g = Math.round((color1.g + color2.g) / 2);
+  let b = Math.round((color1.b + color2.b) / 2);
+
+  return {
+    name: `${color1.name}-${color2.name}`,
+    r,
+    g,
+    b,
+  };
 }
 
 export function adjustBrightness(color, factor) {
   // Your code here
+
+  if (color === null || factor === null || typeof factor !== "number")
+    return null;
+
+  if (factor < 0) return null;
+
+  let r = color.r * factor > 255 ? 255 : color.r * factor;
+  let g = color.g * factor > 255 ? 255 : color.g * factor;
+  let b = color.b * factor > 255 ? 255 : color.b * factor;
+
+  return {
+    name: color.name,
+    r,
+    g,
+    b,
+  };
 }
 
 export function addToPalette(palette, color) {
   // Your code here
+
+  if (!Array.isArray(palette)) return [color];
+  if (!color || typeof color !== "object") {
+    return [...palette];
+  }
+
+  return [...palette, color];
 }
 
 export function removeFromPalette(palette, colorName) {
   // Your code here
+
+  if (!Array.isArray(palette)) return [];
+
+  let filteredPallete = palette.filter((color) => color.name !== colorName);
+  return filteredPallete;
 }
 
 export function mergePalettes(palette1, palette2) {
-  // Your code here
+  const arr1 = Array.isArray(palette1) ? palette1 : [];
+  const arr2 = Array.isArray(palette2) ? palette2 : [];
+
+  const seen = new Set();
+  const merged = [];
+
+  for (const item of [...arr1, ...arr2]) {
+    if (!item || typeof item.name === "undefined") continue;
+
+    if (!seen.has(item.name)) {
+      seen.add(item.name);
+      merged.push(item);
+    }
+  }
+
+  return merged;
 }
